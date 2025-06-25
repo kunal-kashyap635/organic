@@ -20,8 +20,8 @@ function verify()
     // Include the Razorpay PHP library
 
     // Initialize Razorpay with your key and secret
-    $api_key = 'rzp_test_E3GOhpUxaH16Is';
-    $api_secret = 'fdpHBQU2BzA95mRPe5SIxTsF';
+    $api_key = 'rzp_test_xxxxxxxxxxxxxxxxx';
+    $api_secret = 'xxxxxxxxxxxxxxxxxxxxxxx';
 
     $api = new Api($api_key, $api_secret);
 
