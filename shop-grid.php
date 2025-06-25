@@ -435,6 +435,11 @@
                 </div>
                 <div class="row">
                     <?php
+
+                    // Get price range from URL parameters if they exist
+                    //$minPrice = isset($_GET['minPrice']) ? (int)$_GET['minPrice'] : 0;
+                    //$maxPrice = isset($_GET['maxPrice']) ? (int)$_GET['maxPrice'] : 0;
+
                     if (!isset($_GET['page'])) {
                         $page = 1;
                     } else {
@@ -448,9 +453,11 @@
                     $result = $db->query($query);
                     $totnum = $result->num_rows; // tell the total no.of product
                     // echo $totnum;  
+
                     //determine the total number of pages available  
                     $number_of_page = ceil($totnum / $per_page);
                     // echo $number_of_page;
+                    
                     $query = "SELECT * FROM product LIMIT " . $page_first . ',' . $per_page;
                     $pr = $db->query($query);
                     while ($pd = $pr->fetch_assoc()) {

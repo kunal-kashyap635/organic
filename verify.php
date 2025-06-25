@@ -65,7 +65,7 @@ function verify()
         $oamt = $qchk['orderamt'];
 
         $pstat = ($oamt == $amount_paid) ? "success" : "Amount Mismatch";
-        $qr = $db->query("update orders set payid='$payment_id',paystatus='$pstat',payamt='$amount_paid',paysign='$razorpay_signature',status='UNDER PROCESS' where rzp_orderid='{$_POST['razorpay_order_id']}' and status='NEW' ");
+        $qr = $db->query("update orders set payid='$payment_id',paystatus='$pstat',payamt='$amount_paid',paysign='$razorpay_signature',status='underprocess' where rzp_orderid='{$_POST['razorpay_order_id']}' and status='NEW' ");
         ?>
         <!DOCTYPE html>
         <html>

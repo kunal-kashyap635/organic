@@ -31,6 +31,7 @@ if ($orderHeaders->num_rows > 0) {
         }
 
         $order['items'] = $items;
+        $order['item_count'] = count($items);
         $orders[] = $order;
     }
 }
@@ -108,9 +109,9 @@ if ($orderHeaders->num_rows > 0) {
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Checkout</h2>
+                    <h2>Orders Summary</h2>
                     <div class="breadcrumb__option">
-                        <a href="./index.html">Home</a>
+                        <a href="index.php">Home</a>
                         <span>Orders Summary</span>
                     </div>
                 </div>
@@ -133,7 +134,7 @@ if ($orderHeaders->num_rows > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body {
+         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -144,6 +145,7 @@ if ($orderHeaders->num_rows > 0) {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             transition: transform 0.3s;
+            overflow: hidden;
         }
 
         .order-card:hover {
@@ -157,11 +159,13 @@ if ($orderHeaders->num_rows > 0) {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #f8f9fa;
         }
 
         .order-number {
             font-weight: bold;
             color: #333;
+            font-size: 1.1rem;
         }
 
         .status-badge {
@@ -169,6 +173,7 @@ if ($orderHeaders->num_rows > 0) {
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: bold;
+            text-transform: uppercase;
         }
 
         .status-pending {
@@ -176,12 +181,12 @@ if ($orderHeaders->num_rows > 0) {
             color: #856404;
         }
 
-        .status-processing {
+        .status-underprocess {
             background-color: #cce5ff;
             color: #004085;
         }
 
-        .status-shipped {
+        .status-completed {
             background-color: #d4edda;
             color: #155724;
         }
@@ -191,8 +196,81 @@ if ($orderHeaders->num_rows > 0) {
             color: #0c5460;
         }
 
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
         .order-details {
-            padding: 15px;
+            padding: 20px;
+        }
+
+        .order-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .order-meta {
+            flex: 1;
+        }
+
+        .order-meta p {
+            margin-bottom: 5px;
+        }
+
+        .order-items {
+            flex: 2;
+        }
+
+        .items-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item-card {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            background-color: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 1.5rem;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .order-actions {
@@ -200,6 +278,7 @@ if ($orderHeaders->num_rows > 0) {
             border-top: 1px solid #eee;
             display: flex;
             gap: 10px;
+            background-color: #f8f9fa;
         }
 
         .invoice-modal .modal-body {
@@ -224,6 +303,15 @@ if ($orderHeaders->num_rows > 0) {
                 padding: 20px;
             }
         }
+
+        .item-count-badge {
+            background-color: #6c757d;
+            color: white;
+            border-radius: 10px;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -247,23 +335,35 @@ if ($orderHeaders->num_rows > 0) {
                         <div class="order-card">
                             <div class="order-header">
                                 <span class="order-number">Order #<?php echo $order['orderid']; ?></span>
+                                <span class="item-count-badge">
+                                    <?php echo $order['item_count']; ?> item<?php echo $order['item_count'] > 1 ? 's' : ''; ?>
+                                </span>
                                 <span class="status-badge status-<?php echo $order['status']; ?>">
                                     <?php echo ucfirst($order['status']); ?>
                                 </span>
                             </div>
                             <div class="order-details">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Date:</strong> <?php echo date('M j, Y g:i A', strtotime($order['orderdate'])); ?></p>
-                                        <p><strong>Total:</strong> ₹<?php echo number_format($order['orderamt'], 2); ?></p>
+                                <div class="order-summary">
+                                    <div class="order-meta">
+                                        <p><strong>Order Date:</strong> <?php echo date('M j, Y g:i A', strtotime($order['orderdate'])); ?></p>
+                                        <p><strong>Total Amount:</strong> ₹<?php echo number_format($order['orderamt'], 2); ?></p>
+                                        <p><strong>Order Status:</strong> ₹<?php echo $order['status']; ?></p>
                                     </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Items:</strong></p>
-                                        <ul>
+                                    <div class="order-items">
+                                        <ul class="items-list">
                                             <?php foreach ($order['items'] as $item): ?>
-                                                <li>
-                                                    <?php echo $item['prodname']; ?> -
-                                                    <?php echo $item['qty']; ?> x ₹<?php echo $item['price']; ?> = ₹<?php echo $item['amount']; ?>
+                                                <li class="item-card">
+                                                    <div class="item-image">
+                                                        <i class="fas fa-box-open"></i>
+                                                    </div>
+                                                    <div class="item-details">
+                                                        <div class="item-name"><?php echo $item['prodname']; ?></div>
+                                                        <div class="item-meta">
+                                                            <span>Qty: <?php echo $item['qty']; ?></span>
+                                                            <span>Price: ₹<?php echo number_format($item['price'], 2); ?></span>
+                                                            <span>Total: ₹<?php echo number_format($item['amount'], 2); ?></span>
+                                                        </div>
+                                                    </div>
                                                 </li>
                                             <?php endforeach; ?>
                                         </ul>
@@ -271,14 +371,11 @@ if ($orderHeaders->num_rows > 0) {
                                 </div>
                             </div>
                             <div class="order-actions no-print">
-                                <a href="invoice.php?action=view&order_id=<?php echo $order['orderid']; ?>"class="btn btn-sm btn-outline-primary">
+                                <a href="invoice.php?action=view&order_id=<?php echo $order['orderid']; ?>" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-file-invoice"></i> View Invoice
                                 </a>
-                                <a href="invoice.php?action=download&order_id=<?php echo $order['orderid']; ?>"class="btn btn-sm btn-outline-secondary">
+                                <a href="invoice.php?action=download&order_id=<?php echo $order['orderid']; ?>" class="btn btn-sm btn-outline-secondary">
                                     <i class="fas fa-download"></i> Download PDF
-                                </a>
-                                <a href="invoice.php?action=print&order_id=<?php echo $order['orderid']; ?>"class="btn btn-sm btn-outline-success" target="_blank">
-                                    <i class="fas fa-print"></i> Print
                                 </a>
                             </div>
                         </div>

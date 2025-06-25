@@ -167,6 +167,7 @@
         maxamount = $("#maxamount"),
         minPrice = rangeSlider.data('min'),
         maxPrice = rangeSlider.data('max');
+
     rangeSlider.slider({
         range: true,
         min: minPrice,
@@ -175,7 +176,21 @@
         slide: function (event, ui) {
             minamount.val('₹' + ui.values[0]);
             maxamount.val('₹' + ui.values[1]);
-        }
+        },
+        // stop: function (event, ui) {
+        //     // When user stops sliding, get the final values
+        //     var finalMin = ui.values[0];
+        //     var finalMax = ui.values[1];
+
+        //     // Just show the values in console for now
+        //     console.log("Min Price:", finalMin);
+        //     console.log("Max Price:", finalMax);
+
+        //     // You can use these values to filter products later
+        //     // For now, we'll just redirect with these values
+        //     window.location.href = 'shop-grid.php?minPrice=' + finalMin + '&maxPrice=' + finalMax;
+        // }
+
     });
     minamount.val('₹' + rangeSlider.slider("values", 0));
     maxamount.val('₹' + rangeSlider.slider("values", 1));
@@ -223,7 +238,7 @@
         }
         $button.parent().find('input').val(newVal);
 
-        $.post("addtocart.php", { newVal, pid }, function(res){
+        $.post("addtocart.php", { newVal, pid }, function (res) {
             // alert(res);
             window.location.reload();
         });

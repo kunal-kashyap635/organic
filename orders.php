@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $errorMsg = null;
 
     // Validate and sanitize input
-    $allowedStatuses = ['PENDING', 'UNDER PROCESS', 'COMPLETED', 'CANCELLED', 'DELIVERED'];
+    $allowedStatuses = ['pending', 'underprocess', 'completed', 'cancelled', 'delivered'];
 
     if (in_array($newStatus, $allowedStatuses)) {
         $stmt = $db->prepare("UPDATE orders SET status = ? WHERE orderid = ?");
@@ -187,7 +187,7 @@ $result = $stmt->get_result();
             font-weight: bold;
         }
 
-        .status-under-process {
+        .status-underprocess {
             color: #0277BD;
             font-weight: bold;
         }
@@ -387,7 +387,7 @@ $result = $stmt->get_result();
 
                     // Start new order
                     $currentOrderId = $row['orderid'];
-                    $statusClass = 'status-' . strtolower(str_replace(' ', '-', $row['status']));
+                    $statusClass = 'status-' . $row['status'];
         ?>
 
                     <div class="order-card">
@@ -399,11 +399,11 @@ $result = $stmt->get_result();
                                 <form method="post" class="status-form">
                                     <input type="hidden" name="order_id" value="<?= $row['orderid'] ?>">
                                     <select name="new_status" class="status-select">
-                                        <option value="UNDER PROCESS" <?= $row['status'] == 'UNDER PROCESS' ? 'selected' : '' ?>>Under Process</option>
-                                        <option value="PENDING" <?= $row['status'] == 'PENDING' ? 'selected' : '' ?>>Pending</option>
-                                        <option value="COMPLETED" <?= $row['status'] == 'COMPLETED' ? 'selected' : '' ?>>Completed</option>
-                                        <option value="CANCELLED" <?= $row['status'] == 'CANCELLED' ? 'selected' : '' ?>>Cancelled</option>
-                                        <option value="DELIVERED" <?= $row['status'] == 'DELIVERED' ? 'selected' : '' ?>>Delivered</option>
+                                        <option value="underprocess" <?= $row['status'] == 'underprocess' ? 'selected' : '' ?>>Under Process</option>
+                                        <option value="pending" <?= $row['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                        <option value="completed" <?= $row['status'] == 'completed' ? 'selected' : '' ?>>Completed</option>
+                                        <option value="cancelled" <?= $row['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        <option value="delivered" <?= $row['status'] == 'delivered' ? 'selected' : '' ?>>Delivered</option>
                                     </select>
                                     <button type="submit" name="update_status" class="update-btn">Update</button>
                                 </form>
