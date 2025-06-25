@@ -8,8 +8,8 @@ function paynow($pay)
 {
 
 // Initialize Razorpay with your key and secret
-$api_key = 'rzp_test_E3GOhpUxaH16Is';
-$api_secret = 'fdpHBQU2BzA95mRPe5SIxTsF';
+$api_key = 'rzp_test_xxxxxxxxxxxxxxx';
+$api_secret = 'xxxxxxxxxxxxxxxxxxxxx';
 
 $api = new Api($api_key, $api_secret);
 
