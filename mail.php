@@ -17,13 +17,13 @@ try {
     $mail->isSMTP();                                            
     $mail->Host       = 'smtp.gmail.com';                     
     $mail->SMTPAuth   = true;                                   
-    $mail->Username   = 'kunalkash50@gmail.com';                     
-    $mail->Password   = "nkjbjokcnstrhbco";                               
+    $mail->Username   = 'example@gmail.com';                     
+    $mail->Password   = "xxxxxxxxxxxxx";                               
                
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;   
     $mail->Port       = 587;                                    
 
-    $mail->setFrom('kunalkash50@gmail.com', 'kunal');
+    $mail->setFrom('example@gmail.com', 'example');
     $mail->addAddress($to);    
     
     // $mail->addAttachment('./test.txt');     
